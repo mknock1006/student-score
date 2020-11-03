@@ -1,0 +1,26 @@
+import numpy as np
+import pandas as pd
+import math
+
+df = pd.read_excel('score.xlsx', sheet_name='Sheet1')
+df.set_index('이름', inplace=True)
+df.columns.name = '과목'
+sub_name = df.columns
+
+
+df_columns = len(df.columns) # 5
+df_rows = len(df.index) # 20
+
+df['학생 총점'] = df.sum(axis=1)
+df['학생 평균'] = df.iloc[:,:df_columns].mean(axis=1)
+
+df['전체 등수'] = df['학생 총점'].rank(method='dense', ascending=False)
+
+df.loc['과목 총점'] = df.iloc[:df_rows,:df_columns].sum(axis=0)
+df.loc['과목 평균'] = df.iloc[:df_rows,:df_columns].mean(axis=0)
+
+pd.set_option('display.float_format', '{:.2f}'.format) 
+df = df.fillna('-')
+
+df
+
